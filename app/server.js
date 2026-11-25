@@ -337,6 +337,25 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Aurora rodando em http://127.0.0.1:${PORT}`);
+const HOST = process.env.HOST || "0.0.0.0";
+server.listen(PORT, HOST, async () => {
+  // Detecta o IP local da rede para exibir na mensagem de inicialização
+  let localIp = "0.0.0.0";
+  try {
+    const { networkInterfaces } = await import("node:os");
+    const nets = networkInterfaces();
+    for (const name of Object.keys(nets)) {
+      for (const net of nets[name] || []) {
+        if (net.family === "IPv4" && !net.internal && net.address.startsWith("192.168.")) {
+          localIp = net.address;
+          break;
+        }
+      }
+      if (localIp !== "0.0.0.0") break;
+    }
+  } catch (_) {}
+  console.log(`Aurora rodando em http://${HOST}:${PORT}`);
+  if (localIp !== "0.0.0.0") {
+    console.log(`Acesso na rede local: http://${localIp}:${PORT}`);
+  }
 });
