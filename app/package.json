@@ -7,9 +7,15 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+    "db:setup": "node db/setup.js",
+    "db:seed": "node db/setup.js --seed",
+    "db:backup-win": "powershell -ExecutionPolicy Bypass -File db/backup.ps1",
+    "db:backup": "bash db/backup.sh",
     "reset": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('data',{recursive:true,force:true})\""
   },
   "engines": {
     "node": ">=22.5"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

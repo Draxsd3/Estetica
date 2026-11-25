@@ -1,0 +1,123 @@
+-- ============================================================================
+-- Aurora — Seed de dados (ambiente de desenvolvimento / demonstração)
+-- NÃO usar em produção com dados reais de pacientes.
+-- IDs fixos (UUID v4) para manter integridade referencial entre tabelas.
+-- ============================================================================
+
+-- Tenant (clínica)
+INSERT INTO tenants (id, name, fantasy_name, cnpj, phone, email, city, state, zip_code) VALUES
+('11111111-1111-1111-1111-111111111111','Clínica Aurora Estética LTDA','Aurora Estética','12345678000199','(11) 3000-0000','contato@auroraestetica.com.br','São Paulo','SP','01234000')
+ON CONFLICT (id) DO NOTHING;
+
+-- Usuários (senhas hasheadas são apenas placeholders — redefinir no primeiro acesso)
+INSERT INTO users (id, tenant_id, email, password_hash, name, role, mfa_enabled) VALUES
+('22222222-2222-2222-2222-222222222222','11111111-1111-1111-1111-111111111111','dona@auroraestetica.com.br','$2b$10$PLACEHOLDER_DO_NOT_USE','Dra. Marina Alves','owner', true),
+('33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111','recepcion@auroraestetica.com.br','$2b$10$PLACEHOLDER_DO_NOT_USE','Recepção Aurora','receptionist', false),
+('44444444-4444-4444-4444-444444444444','11111111-1111-1111-1111-111111111111','financeiro@auroraestetica.com.br','$2b$10$PLACEHOLDER_DO_NOT_USE','Financeiro Aurora','finance', false)
+ON CONFLICT (id) DO NOTHING;
+
+-- Profissionais
+INSERT INTO professionals (id, tenant_id, user_id, name, role, council_type, council_number, council_uf, color, commission_pct, commission_base, active) VALUES
+('55555555-5555-5555-5555-555555555555','11111111-1111-1111-1111-111111111111','22222222-2222-2222-2222-222222222222','Dra. Marina Alves','Biomédica','CRBM','12345','SP','#1B4A3F',10,'received', true),
+('66666666-6666-6666-6666-666666666666','11111111-1111-1111-1111-111111111111',NULL,'Camila Souza','Esteticista','—','—','—','#B08255',8,'received', true),
+('77777777-7777-7777-7777-777777777777','11111111-1111-1111-1111-111111111111',NULL,'Dr. Rafael Lima','Médico','CRM','54321','SP','#3E6B8A',12,'executed', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Pacientes
+INSERT INTO patients (id, tenant_id, name, cpf, birth_date, phone, email, origin, alerts, notes, marketing_consent, image_consent, active) VALUES
+('88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111','Ana Beatriz Rocha','41288391022','1991-04-12','(11) 98812-4477','ana.rocha@email.com','Instagram','Alergia a lidocaína. Prefere atendimento pela manhã.','Primeira avaliação agendada.', true, false, true),
+('99999999-9999-9999-9999-999999999999','11111111-1111-1111-1111-111111111111','Juliana Prado','31844270109','1986-09-30','(11) 99145-2210','ju.prado@email.com','Indicação','Pós-gestação, amamentando até jan/2027.','Pele sensível.', true, false, true),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','11111111-1111-1111-1111-111111111111','Marcos Vinícius Alves','29011733455','1983-02-17','(11) 97733-8890','marcos.va@email.com','Google','','Faz laser para cicatriz de acne.', false, false, true),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','11111111-1111-1111-1111-111111111111','Helena Castro','37790211840','1995-11-05','(11) 98120-7745','helena.c@email.com','Indicação','Pele sensível, histórico de melasma.','', true, false, true),
+('cccccccc-cccc-cccc-cccc-cccccccccccc','11111111-1111-1111-1111-111111111111','Patrícia Nunes','45520388712','1979-07-21','(11) 99631-0044','pati.nunes@email.com','WhatsApp','','Pacote de criolipólise em andamento.', false, false, true),
+('dddddddd-dddd-dddd-dddd-dddddddddddd','11111111-1111-1111-1111-111111111111','Larissa Mendes','50377122988','1998-06-08','(11) 98477-6621','lari.mendes@email.com','Google','','Primeira avaliação.', true, false, true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Produtos / insumos
+INSERT INTO products (id, tenant_id, name, type, unit, cost_cents, min_stock, lot_controlled, anvisa_register, active) VALUES
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee','11111111-1111-1111-1111-111111111111','Toxina botulínica 100U','consumable','frasco',140000,2,true,'1234567890123',true),
+('ffffffff-ffff-ffff-ffff-ffffffffffff','11111111-1111-1111-1111-111111111111','Ácido hialurônico 1ml','consumable','seringa',85000,2,true,'1234567890124',true),
+('11111111-2222-3333-4444-555555555551','11111111-1111-1111-1111-111111111111','Seringa 1ml','consumable','un',300,10,true,NULL,true),
+('11111111-2222-3333-4444-555555555552','11111111-1111-1111-1111-111111111111','Agulha 30G','consumable','un',200,20,true,NULL,true),
+('11111111-2222-3333-4444-555555555553','11111111-1111-1111-1111-111111111111','Luva descartável','consumable','par',250,30,true,NULL,true),
+('11111111-2222-3333-4444-555555555554','11111111-1111-1111-1111-111111111111','Gaze estéril','consumable','pacote',100,20,true,NULL,true),
+('11111111-2222-3333-4444-555555555555','11111111-1111-1111-1111-111111111111','Anestésico tópico','consumable','bisnaga',3500,3,true,NULL,true),
+('11111111-2222-3333-4444-555555555556','11111111-1111-1111-1111-111111111111','Ponteira dermapen','consumable','un',4500,5,true,NULL,true),
+('11111111-2222-3333-4444-555555555557','11111111-1111-1111-1111-111111111111','Membrana criolipólise','consumable','un',5000,4,true,NULL,true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Lotes de estoque (FEFO)
+INSERT INTO stock_lots (id, product_id, lot_code, expires_on, qty, qty_initial, supplier, cost_cents, active) VALUES
+('22222222-2222-2222-2222-222222222223','eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee','TX-2405','2026-12-15',1,1,'Allergan',140000,true),
+('22222222-2222-2222-2222-222222222224','eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee','TX-2410','2027-05-22',4,4,'Allergan',140000,true),
+('22222222-2222-2222-2222-222222222225','ffffffff-ffff-ffff-ffff-ffffffffffff','AH-9931','2027-09-19',5,5,'Galderma',85000,true),
+('22222222-2222-2222-2222-222222222226','11111111-2222-3333-4444-555555555551','SG-01','2029-05-11',40,40,'Descarpack',300,true),
+('22222222-2222-2222-2222-222222222227','11111111-2222-3333-4444-555555555552','AG-30','2029-05-11',60,60,'BD',200,true),
+('22222222-2222-2222-2222-222222222228','11111111-2222-3333-4444-555555555553','LV-12','2028-04-06',80,80,'Supermax',250,true),
+('22222222-2222-2222-2222-222222222229','11111111-2222-3333-4444-555555555554','GZ-08','2028-10-23',25,25,'Cremer',100,true),
+('22222222-2222-2222-2222-222222222230','11111111-2222-3333-4444-555555555555','AN-77','2027-07-21',6,6,'Lidocaína',3500,true),
+('22222222-2222-2222-2222-222222222231','11111111-2222-3333-4444-555555555556','DP-22','2028-07-15',11,12,'Dermapen',4500,true),
+('22222222-2222-2222-2222-222222222232','11111111-2222-3333-4444-555555555557','MB-31','2027-12-28',9,9,'Kavo',5000,true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Serviços
+INSERT INTO services (id, tenant_id, name, category, minutes, price_cents, requires_prescription, requires_evaluation, active) VALUES
+('33333333-3333-3333-3333-333333333333','11111111-1111-1111-1111-111111111111','Toxina botulínica — 1 região','Injetáveis',30,120000,true,false,true),
+('33333333-3333-3333-3333-333333333334','11111111-1111-1111-1111-111111111111','Preenchimento labial 1ml','Injetáveis',60,240000,true,false,true),
+('33333333-3333-3333-3333-333333333335','11111111-1111-1111-1111-111111111111','Limpeza de pele profunda','Facial',60,28000,false,false,true),
+('33333333-3333-3333-3333-333333333336','11111111-1111-1111-1111-111111111111','Peeling químico médio','Facial',45,45000,false,false,true),
+('33333333-3333-3333-3333-333333333337','11111111-1111-1111-1111-111111111111','Criolipólise — 1 área','Corpo',90,90000,false,false,true),
+('33333333-3333-3333-3333-333333333338','11111111-1111-1111-1111-111111111111','Microagulhamento facial','Facial',60,55000,false,false,true),
+('33333333-3333-3333-3333-333333333339','11111111-1111-1111-1111-111111111111','Laser CO2 fracionado — face','Facial',90,180000,false,false,true),
+('33333333-3333-3333-3333-333333333340','11111111-1111-1111-1111-111111111111','Skinbooster — 1 sessão','Injetáveis',45,110000,true,false,true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Ficha técnica (BOM) dos serviços
+INSERT INTO service_materials (id, service_id, product_id, qty, notes) VALUES
+-- Toxina
+('44444444-4444-4444-4444-444444444401','33333333-3333-3333-3333-333333333333','eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',0.25,NULL),
+('44444444-4444-4444-4444-444444444402','33333333-3333-3333-3333-333333333333','11111111-2222-3333-4444-555555555551',1,NULL),
+('44444444-4444-4444-4444-444444444403','33333333-3333-3333-3333-333333333333','11111111-2222-3333-4444-555555555552',2,NULL),
+('44444444-4444-4444-4444-444444444404','33333333-3333-3333-3333-333333333333','11111111-2222-3333-4444-555555555553',2,NULL),
+('44444444-4444-4444-4444-444444444405','33333333-3333-3333-3333-333333333333','11111111-2222-3333-4444-555555555554',3,NULL),
+-- Preenchimento
+('44444444-4444-4444-4444-444444444411','33333333-3333-3333-3333-333333333334','ffffffff-ffff-ffff-ffff-ffffffffffff',1,NULL),
+('44444444-4444-4444-4444-444444444412','33333333-3333-3333-3333-333333333334','11111111-2222-3333-4444-555555555551',1,NULL),
+('44444444-4444-4444-4444-444444444413','33333333-3333-3333-3333-333333333334','11111111-2222-3333-4444-555555555552',2,NULL),
+('44444444-4444-4444-4444-444444444414','33333333-3333-3333-3333-333333333334','11111111-2222-3333-4444-555555555553',2,NULL),
+-- Limpeza de pele
+('44444444-4444-4444-4444-444444444421','33333333-3333-3333-3333-333333333335','11111111-2222-3333-4444-555555555554',10,NULL),
+('44444444-4444-4444-4444-444444444422','33333333-3333-3333-3333-333333333335','11111111-2222-3333-4444-555555555553',2,NULL),
+('44444444-4444-4444-4444-444444444423','33333333-3333-3333-3333-333333333335','11111111-2222-3333-4444-555555555555',0.2,NULL),
+-- Peeling
+('44444444-4444-4444-4444-444444444431','33333333-3333-3333-3333-333333333336','11111111-2222-3333-4444-555555555554',4,NULL),
+('44444444-4444-4444-4444-444444444432','33333333-3333-3333-3333-333333333336','11111111-2222-3333-4444-555555555553',2,NULL),
+('44444444-4444-4444-4444-444444444433','33333333-3333-3333-3333-333333333336','11111111-2222-3333-4444-555555555555',0.2,NULL),
+-- Criolipólise
+('44444444-4444-4444-4444-444444444441','33333333-3333-3333-3333-333333333337','11111111-2222-3333-4444-555555555557',1,NULL),
+('44444444-4444-4444-4444-444444444442','33333333-3333-3333-3333-333333333337','11111111-2222-3333-4444-555555555553',2,NULL),
+-- Microagulhamento
+('44444444-4444-4444-4444-444444444451','33333333-3333-3333-3333-333333333338','11111111-2222-3333-4444-555555555556',1,NULL),
+('44444444-4444-4444-4444-444444444452','33333333-3333-3333-3333-333333333338','11111111-2222-3333-4444-555555555553',2,NULL),
+('44444444-4444-4444-4444-444444444453','33333333-3333-3333-3333-333333333338','11111111-2222-3333-4444-555555555555',0.3,NULL),
+-- Laser CO2
+('44444444-4444-4444-4444-444444444461','33333333-3333-3333-3333-333333333339','11111111-2222-3333-4444-555555555556',1,NULL),
+('44444444-4444-4444-4444-444444444462','33333333-3333-3333-3333-333333333339','11111111-2222-3333-4444-555555555555',0.3,NULL),
+('44444444-4444-4444-4444-444444444463','33333333-3333-3333-3333-333333333339','11111111-2222-3333-4444-555555555554',5,NULL),
+-- Skinbooster
+('44444444-4444-4444-4444-444444444471','33333333-3333-3333-3333-333333333340','ffffffff-ffff-ffff-ffff-ffffffffffff',1,NULL),
+('44444444-4444-4444-4444-444444444472','33333333-3333-3333-3333-333333333340','11111111-2222-3333-4444-555555555551',1,NULL),
+('44444444-4444-4444-4444-444444444473','33333333-3333-3333-3333-333333333340','11111111-2222-3333-4444-555555555553',2,NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- Configurações da clínica
+INSERT INTO settings (id, tenant_id, key, value) VALUES
+('55555555-5555-5555-5555-555555555501','11111111-1111-1111-1111-111111111111','room_hour_cents','4000'),
+('55555555-5555-5555-5555-555555555502','11111111-1111-1111-1111-111111111111','prof_hour_cents','12000'),
+('55555555-5555-5555-5555-555555555503','11111111-1111-1111-1111-111111111111','card_fee_pct','2.5'),
+('55555555-5555-5555-5555-555555555504','11111111-1111-1111-1111-111111111111','quote_validity_days','15')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- FIM DO SEED
+-- ============================================================================

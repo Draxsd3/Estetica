@@ -1,0 +1,29 @@
+{
+  "dialect": "postgresql",
+  "min_version": "15",
+  "extensions": ["pgcrypto"],
+  "migrations": [
+    {
+      "version": "001",
+      "name": "initial_schema",
+      "file": "001_initial.sql",
+      "applied_at": null,
+      "description": "Schema inicial completo: tenants, usuários, pacientes, serviços, estoque por lote, orçamentos, vendas, receita diferida, comissões, fiscal, auditoria e views de relatório."
+    },
+    {
+      "version": "002",
+      "name": "future_example",
+      "file": null,
+      "description": "Exemplo de migração futura (criar quando houver evolução de schema)."
+    }
+  ],
+  "seed": {
+    "file": "seed.sql",
+    "description": "Dados de demonstração com UUIDs fixos. Não usar em produção com dados reais de pacientes."
+  },
+  "notes": [
+    "Execute 001_initial.sql como superusuário ou usuário com privilégio de criar extensões (pgcrypto).",
+    "Após o schema, rode seed.sql apenas em ambientes de homologação/desenvolvimento.",
+    "Em produção, NÃO rode o seed. Crie o tenant e o primeiro usuário pelo fluxo de onboarding da aplicação."
+  ]
+}

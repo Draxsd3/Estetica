@@ -1,0 +1,41 @@
+# Aurora — gitignore
+
+# Dependências
+node_modules/
+.pnpm-store/
+
+# Variáveis de ambiente (nunca commitar com segredos reais)
+.env
+.env.local
+.env.production.local
+
+# Banco de dados local (SQLite) e backups
+app/data/
+app/backups/
+*.db
+*.db-shm
+*.db-wal
+
+# Build / dist
+dist/
+build/
+.next/
+.nuxt/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Documentação gerada
+_build/
+*.pdf
+*.docx
