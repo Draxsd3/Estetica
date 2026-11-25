@@ -1,0 +1,15 @@
+{
+  "name": "aurora-clinica",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Aurora — gestão de clínica de estética: do orçamento ao controle financeiro",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "reset": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('data',{recursive:true,force:true})\""
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}
